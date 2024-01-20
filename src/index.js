@@ -1,11 +1,35 @@
 // import lru from "./ds/LRUCache/index.js";
 // import quickSort from "./ds/quickSort/index.js";
-
-import TaskRunner from "./interview-questions/TaskRunner/index.js";
-
+// import crypto from "./interview-questions/crypto/index.js";
+// import TaskRunner from "./interview-questions/TaskRunner/index.js";
 // import memoizeFunction from "./interview-questions/memoizeFunction/index.js";
+// import mergeInterval from "./ds/mergeIntervals/index.js";
+// import insertInterval from "./ds/insertInterval/index.js";
+// import ExpiryCache from "./ds/ExpiryCache/index.js";
+// import TimeBasedKeyStore from "./ds/TimeBasedKeyStore/index.js";
+// import binarySearch from "./ds/binarySearch/index.js";
+// import uberCarParkingInterval from "./ds/uberCarParkingInterval/index.js";
+// import nonOverlappingIntervals from "./ds/nonOverlappingIntervals/index.js";
+// import meetingRoom1 from "./ds/meetingRoom1/index.js";
+// import meetingRooms2 from "./ds/meetingRooms2/index.js";
+// import taskScheduler from "./ds/taskScheduler/index.js";
+// import MinHeap from "./ds/MinHeap/index.js";
+import MaxHeap from "./ds/maxHeap/index.js";
 
 // lru();
 // quickSort();
 // memoizeFunction();
-TaskRunner();
+// crypto();
+// TaskRunner();
+// mergeInterval();
+// insertInterval();
+// ExpiryCache();
+// TimeBasedKeyStore();
+// binarySearch();
+// uberCarParkingInterval();
+// nonOverlappingIntervals();
+// meetingRoom1();
+// meetingRooms2();
+// taskScheduler();
+// MinHeap();
+MaxHeap();
