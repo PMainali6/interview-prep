@@ -1,15 +1,13 @@
 import LRUCache from "./LRUCache.js";
 
-function run() {
+export default function () {
   const lru = new LRUCache(3);
 
   lru.set("a", "apple");
   lru.set("b", "ball");
   lru.set("c", "cat");
-  lru.print();
+  console.log("LRU: ", Array.from(lru.print()));
   lru.get("a");
   lru.set("d", "Dick");
-  lru.print();
+  console.log("LRU: ", Array.from(lru.print()));
 }
-
-export default run;

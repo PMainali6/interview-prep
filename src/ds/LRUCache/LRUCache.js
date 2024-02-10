@@ -1,105 +1,114 @@
-function createNode(value) {
-  return { value, next: undefined, prev: undefined };
+class Node {
+  constructor(val) {
+    this.value = val;
+    this.next = this.prev = null;
+  }
+}
+
+class DoublyLinkedList {
+  constructor() {
+    this.head = this.tail = null;
+    this.size = 0;
+  }
+
+  insert(val) {
+    const newNode = new Node(val);
+
+    if (this.head === null) {
+      this.head = this.tail = newNode;
+    } else {
+      const head = this.head;
+      newNode.next = head;
+      head.prev = newNode;
+      this.head = newNode;
+    }
+
+    this.size++;
+    return newNode;
+  }
+
+  removeNode(node) {
+    if (this.size === 0) {
+      return null;
+    }
+
+    if (this.size === 1) {
+      this.head = this.tail = null;
+      this.size = 0;
+      node.next = node.prev = null;
+      return node;
+    }
+
+    const nextNode = node.next;
+    const prevNode = node.prev;
+
+    if (nextNode) {
+      nextNode.prev = prevNode;
+    }
+
+    if (prevNode) {
+      prevNode.next = nextNode;
+    }
+
+    this.size--;
+    node.next = node.prev = null;
+    return node;
+  }
+
+  removeTail() {
+    const tail = this.tail;
+    const tailNode = this.removeNode(tail);
+    return tailNode;
+  }
 }
 
 class LRUCache {
-  constructor(capacity) {
-    this.head = undefined;
-    this.tail = undefined;
-    this.capacity = capacity;
-    this.length = 0;
+  constructor(max) {
+    this.maxSize = max;
     this.lookup = new Map();
     this.reverseLookup = new Map();
-  }
-
-  get(key) {
-    let node = this.lookup.get(key);
-
-    if (!node) {
-      return;
-    }
-
-    this.prepend(node);
-    this.detach(node);
-
-    return node.value;
+    this.dlist = new DoublyLinkedList();
   }
 
   set(key, value) {
-    let node = this.lookup.get(key);
-
-    if (!node) {
-      let node = createNode(value);
-      this.length++;
-
-      this.prepend(node);
-      this.trimCache();
-
-      this.lookup.set(key, node);
-      this.reverseLookup.set(node, key);
-    } else {
-      this.detach(node);
-      this.prepend(node);
-      node.value = value;
+    if (this.maxSize === this.dlist.size) {
+      this.evict();
     }
+
+    if (this.lookup.has(key)) {
+      const existingNode = this.lookup.get(key);
+      this.dlist.removeNode(existingNode);
+    }
+
+    const newNode = this.dlist.insert(value);
+    this.lookup.set(key, newNode);
+    this.reverseLookup.set(newNode, key);
   }
 
-  prepend(node) {
-    if (!this.head) {
-      this.head = this.tail = node;
-      return;
+  get(key) {
+    if (!this.lookup.has(key)) {
+      return null;
     }
 
-    const head = this.head;
-
-    node.next = head;
-    head.prev = node;
-    this.head = node;
+    const node = this.lookup.get(key);
+    this.dlist.removeNode(node);
+    this.dlist.insert(node.value);
+    return node.value;
   }
 
-  detach(node) {
-    if (this.length === 0) {
-      return;
+  evict() {
+    if (this.dlist.size === 0) {
+      return null;
     }
 
-    if (this.head === node) {
-      this.head = node.next;
-    }
-
-    if (this.tail === node) {
-      this.tail = node.prev;
-    }
-
-    if (node.prev) {
-      node.prev.next = node.next;
-    }
-
-    if (node.next) {
-      node.next.prev = node.prev;
-    }
-
-    node.next = node.prev = undefined;
-  }
-
-  trimCache() {
-    if (this.length <= this.capacity) {
-      return;
-    }
-
-    const tailNode = this.tail;
-    const tailKey = this.reverseLookup.get(tailNode);
-
-    this.detach(tailNode);
-    this.lookup.delete(tailKey);
-    this.reverseLookup.delete(tailNode);
-    this.length--;
+    const evictNode = this.dlist.removeTail();
+    const key = this.reverseLookup.get(evictNode);
+    this.lookup.delete(key);
+    this.reverseLookup.delete(evictNode);
   }
 
   print() {
-    console.log("====================");
-    this.lookup.forEach((node, key) => {
-      console.log(`${key}: ${node.value}`);
-    });
+    return this.lookup.keys();
   }
 }
 
